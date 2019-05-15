@@ -8,6 +8,18 @@
 
 #define  BUFF_SIZE   1024
 
+#define RPC_PACK32(x)                                    \
+               (( ((x) & 0xff) << 24) | ( ((x) & 0xff00) << 16) | (((x) & 0xff0000) >> 16) | ( ((x) & 0xff000000) >> 24))
+
+#define __swapbw(x) ((((unsigned int) x) >> 24) |\
+                     (((unsigned int) x) & 0xff0000) >> 8 |\
+                     (((unsigned int) x) & 0x00ff00) << 8 |\
+                     (((unsigned int) x) << 24))
+
+
+
+static int TEST_V = 0x11223344;
+
 int   main( int argc, char **argv)
 {
    int   client_socket;
@@ -22,6 +34,9 @@ int   main( int argc, char **argv)
       printf( "socket 생성 실패\n");
       exit( 1);
    }
+
+      printf( "Before = %8x\n", TEST_V);
+      printf( "After = %8x\n", __swapbw(TEST_V)); 
 
    memset( &server_addr, 0, sizeof( server_addr));
    server_addr.sin_family     = AF_INET;
